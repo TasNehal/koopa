@@ -1,3 +1,4 @@
+//will parse the input text from the user
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -20,7 +21,7 @@ char ** parse_line(char *line, char delim) {
     int ctr = 0;
 
     while (line) {
-        retArr[ctr] = strsep(&line, delim);
+        retArr[ctr] = strsep(&line, &delim);
         printf("%s\n", retArr[ctr]);
         ctr++;
     }

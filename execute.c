@@ -1,3 +1,4 @@
+//will execute things, and will handle stuff like pipes and redirects
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
