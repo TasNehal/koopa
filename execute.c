@@ -18,11 +18,11 @@ void execute(char *line) {
 }
 
 int main() {
-  char input[262144]
-  printf("Do something: ");
-  fgets(input, 262144, stdin);
-  *strchr(input, "\n") = 0;
-  char * line = parse_line(input);
-  execute(input);
-  return 0;
+    char input[262144];
+    printf("➜ ");
+    fgets(input, 262144, stdin);
+    *strchr(input, "\n") = 0;
+    char * line = parse_line(input);
+    execute(input);
+    return 0;
 }
