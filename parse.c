@@ -1,7 +1,4 @@
 //will parse the input text from the user
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 #include "parse.h"
 
 int count_tokens(char *line, char delim) {
