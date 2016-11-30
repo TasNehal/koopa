@@ -4,6 +4,7 @@
 #include <string.h>
 #include "parse.h"
 
-void executeRedirect(char *line, char redirector);
-void executeMultiple(char *line);
-void executeMain(char *line);
+void executeReDIRECT(char ** input, char redirector);
+void executeMAIN(char ** input);
+void executeCD(char * dir);
+void executeEXIT();

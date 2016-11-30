@@ -12,14 +12,13 @@ int count_tokens(char *line, char delim) {
     return ctr;
 }
 
-char ** parse_line(char *line, char delim) {
+char ** parse_line(char *line, char * delims) {
     line = trim(line);
     char ** retArr = (char * *)malloc(sizeof(char *) * strlen(line));
     int ctr = 0;
 
     while (line) {
-        retArr[ctr] = strsep(&line, &delim);
-        printf("%s\n", retArr[ctr]);
+        retArr[ctr] = strsep(&line, delims);
         ctr++;
     }
     retArr[ctr] = 0;
@@ -48,6 +47,3 @@ char * trim(char *line) {
     return retP;
 }
 
-int main() {
-    return 0;
-}

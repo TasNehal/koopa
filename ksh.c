@@ -1,14 +1,30 @@
-//main file, will get input and will have special commands like cd and exit
+//main file, will get input and will split the semicolons
 #include "ksh.h"
 
-//find if command is exit ONLY (1 item), then run ksh_exit() find if first command is cd, then give second object as dirname to ksh_cd(dirname)
-//delete these comments once implemented
+void ksh_run(char * input) {
+    * input = * trim(input);
+    int tokens = count_tokens(input, ';');
+    if (!tokens) {
+        //split by spaces and redirectors, send to execmain
+        char ** data = parse_line(input, ">2&<|");
+        executeMain(data);
+    }
+    else {
+        //recursively run each semicolon seperated part
+        char ** lineItems = parse_line(input, ";");
+        while (lineItems) {
+            ksh_run(*lineItems);
+            lineItems++;
+        }
+    }
+    
+}
+
 int main() {
+    
     char input[262144];
     printf("➜ ");
     fgets(input, 262144, stdin);
-    * input = * trim(input);
-    char ** line = parse_line(input, ';');
-    executeMain(input);
     return 0;
+    
 }

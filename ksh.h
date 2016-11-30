@@ -6,5 +6,4 @@
 #include "parse.h"
 #include "execute.h"
 
-void ksh_cd(char * directory);
-void ksh_exit();
+void ksh_run(char * input);
