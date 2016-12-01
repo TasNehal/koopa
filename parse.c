@@ -42,8 +42,13 @@ char * trim(char *line) {
             }
         }
     }
-
-    
+    //newline?
+    for (int l = strlen(line) ; l > 0 ; l--) {
+        if (line[l] == '\n') {
+            line[l] = '\0';
+            break;
+        }
+    }
     return retP;
 }
 

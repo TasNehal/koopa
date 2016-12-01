@@ -2,19 +2,17 @@
 #include "ksh.h"
 
 void ksh_run(char * input) {
-    * input = * trim(input);
     int tokens = count_tokens(input, ';');
-    if (!tokens) {
+    if (tokens == 1) {
         //split by spaces and redirectors, send to execmain
-        char ** data = parse_line(input, ">2&<|");
-        executeMain(data);
+        executeMain(input);
     }
     else {
         //recursively run each semicolon seperated part
         char ** lineItems = parse_line(input, ";");
-        while (lineItems) {
-            ksh_run(*lineItems);
-            lineItems++;
+        for (int i = 0 ; i < count_tokens(input, ';') ; i++) {
+            printf("%d", i);
+            ksh_run(lineItems[i]);
         }
     }
     
@@ -23,8 +21,14 @@ void ksh_run(char * input) {
 int main() {
     
     char input[262144];
-    printf("➜ ");
-    fgets(input, 262144, stdin);
+    char cwd[262144];
+    while (1) {
+        getcwd(cwd, sizeof(cwd));
+        printf("(%s) %s ❯ ", getenv("USER"), cwd);
+        fgets(input, 262144, stdin);
+        * input = * trim(input);
+        ksh_run(input);
+    }
     return 0;
     
 }

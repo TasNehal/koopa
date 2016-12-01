@@ -1,20 +1,183 @@
 //will execute things, and will handle redirects and custom commands
 #include "execute.h"
 
-void executeMAIN(char ** input) {
+//returns array of [string, redirector, string]
+//second string can also have redirectors, executemain should do them in order
+char ** findRedirector(char * input) {
+    char ** retAry = (char * *)malloc(sizeof(char *) * strlen(input));
+    //making the first part, the pipe, and the rest of the line
+    for (int i = 0 ; i < (int)strlen(input) - 1 ; i++) {
+        if (input[i] == '>') {
+            // >> operator
+            if (input[i + 1] == '>') {
+                for (int j = 0 ; j < i ; j++) {
+                    retAry[0][j] = input[j];
+                }
+                retAry[1] = ">>";
+                for (int k = i + 2 ; k < (int)strlen(input) ; k++) {
+                    retAry[2][k - i - strlen(retAry[1])] = input[k];
+                }
+                return retAry;
+            }
+            // > operator
+            else {
+                for (int j = 0 ; j < i ; j++) {
+                    retAry[0][j] = input[j];
+                }
+                retAry[1] = ">";
+                for (int k = i + 1 ; k < (int)strlen(input) ; k++) {
+                    retAry[2][k - i - strlen(retAry[1])] = input[k];
+                }
+                return retAry;
+            }
+        }
+        else if (input[i] == '2') {
+            if (input[i + 1] == '>') {
+                // 2>> operator
+                if (input[i + 2] == '>') {
+                    for (int j = 0 ; j < i ; j++) {
+                        retAry[0][j] = input[j];
+                    }
+                    retAry[1] = "2>>";
+                    for (int k = i + 3 ; k < (int)strlen(input) ; k++) {
+                        retAry[2][k - i - strlen(retAry[1])] = input[k];
+                    }
+                    return retAry;
+                }
+                // 2> operator
+                else {
+                    for (int j = 0 ; j < i ; j++) {
+                        retAry[0][j] = input[j];
+                    }
+                    retAry[1] = "2>";
+                    for (int k = i + 2 ; k < (int)strlen(input) ; k++) {
+                        retAry[2][k - i - strlen(retAry[1])] = input[k];
+                    }
+                    return retAry;
+                }
+            }
+        }
+        else if (input[i] == '&' && input[i + 1] == '>') {
+            for (int j = 0 ; j < i ; j++) {
+                retAry[0][j] = input[j];
+            }
+            retAry[1] = "&>";
+            for (int k = i + 2 ; k < (int)strlen(input) ; k++) {
+                retAry[2][k - i - strlen(retAry[1])] = input[k];
+            }
+            return retAry;
+        }
+        else if (input[i] == '<') {
+            for (int j = 0 ; j < i ; j++) {
+                retAry[0][j] = input[j];
+            }
+            retAry[1] = "<";
+            for (int k = i + 1 ; k < (int)strlen(input) ; k++) {
+                retAry[2][k - i - strlen(retAry[1])] = input[k];
+            }
+            return retAry;
+        }
+        else if (input[i] == '|') {
+            for (int j = 0 ; j < i ; j++) {
+                retAry[0][j] = input[j];
+            }
+            retAry[1] = "|";
+            for (int k = i + 1 ; k < (int)strlen(input) ; k++) {
+                retAry[2][k - i - strlen(retAry[1])] = input[k];
+            }
+            return retAry;            
+        }
+        else {
+            retAry[0] = input;
+            return retAry;
+        }
+    }
+    //will never reach here
+    return retAry;
+}
+
+//redirect based on the stuf; first 
+void executeRedirector(char ** input) {
+    //if there aren't any redirectors
+    if (!input[1]) {
+        executeMain(input[0]);
+    }
+    else {
+        //if the second part has no redirectors in it
+        if (!hasRedirector(input[2])) {
+            if (!strcmp(input[1], ">>")) {
+                
+            }
+            else if (!strcmp(input[1], ">")) {
+                //continue like this
+            }
+        }
+        else {
+            
+        }
+    }
+    
+}
+
+int hasRedirector(char * input) {
+    char * first;
+    if (strchr(input, '>') || strchr(input, '<') || strchr(input, '|')) {
+        return 1;
+    }
+    else if ((first = strchr(input, '&')) != '\0') {
+        first++;
+        if (*first == '>') {
+            return 1;
+        }
+        else {
+            return 0;
+        }
+    }
+    else if ((first = strchr(input, '2')) != '\0') {
+        first++;
+        if (*first == '>') {
+            return 1;
+        }
+        else {
+            return 0;
+        }
+    }
+    else {
+        return 0;
+    }
+}
+
+//THIS SEGFAULTS
+void executeMain(char * data) {
+    //redirectors
+    char ** input = parse_line(data, " ");
     //if only one item and its exit, run exit
-    if ((sizeof(input) / sizeof(char *)) == 1 && (!strcmp(input[0], "exit"))) {
+    if ((!input[1]) && (!strcmp(input[0], "exit"))) {
         executeEXIT();
     }
     //if two items with cd as first, run cd on second
-    else if ((sizeof(input) / sizeof(char *)) == 2 && (!strcmp(input[0], "cd"))) {
-        executeCD(input[2]);
+    if ((!input[2]) && (!strcmp(input[0], "cd"))) {
+        executeCD(input[1]);
+    }
+    //EVERYTHING ABOVE THIS WORKS.
+    //check for redirectors
+    char ** redirectorInput = findRedirector(data);
+    if (redirectorInput[1]) {
+        executeRedirector(redirectorInput);
     }
     else {
         // fork and run?
         int fid = fork();
         int status;
-        //check for redirectors
+        
+        if (fid == 0) {
+            printf("waitin parent");
+            wait(&status);
+        }
+        else {
+            printf("boi");
+            execvp(input[0], input);
+        }
     }
 }
 
@@ -24,5 +187,14 @@ void executeEXIT() {
 }
 
 void executeCD(char * dir) {
+    //tilde expansion
+    if (dir[0] == '~') {
+        chdir(getenv("HOME"));
+        int i;
+        for (i = 0 ; i < (int)strlen(dir) - 2 ; i++) {
+            dir[i] = dir[i + 2];
+        }
+        dir[i] = '\0';
+    }
     chdir(dir);
 }
