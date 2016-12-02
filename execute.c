@@ -147,54 +147,20 @@ int hasRedirector(char * input) {
     }
 }
 
-//THIS SEGFAULTS
 void executeMain(char * data) {
-    //redirectors
-    char ** input = parse_line(data, " ");
-    //if only one item and its exit, run exit
-    if ((!input[1]) && (!strcmp(input[0], "exit"))) {
-        executeEXIT();
-    }
-    //if two items with cd as first, run cd on second
-    if ((!input[2]) && (!strcmp(input[0], "cd"))) {
-        executeCD(input[1]);
-    }
-    //EVERYTHING ABOVE THIS WORKS.
-    //check for redirectors
-    char ** redirectorInput = findRedirector(data);
-    if (redirectorInput[1]) {
-        executeRedirector(redirectorInput);
-    }
-    else {
-        // fork and run?
-        int fid = fork();
-        int status;
-        
-        if (fid == 0) {
-            printf("waitin parent");
-            wait(&status);
-        }
-        else {
-            printf("boi");
-            execvp(input[0], input);
-        }
-    }
-}
-
-void executeEXIT() {
-    //is that it?
+  char ** command = parse_line(data, " ");
+  if (!strcmp(command[0], "cd"))
+    chdir(command[1]);
+  else if (!strcmp(command[0], "exit"))
     exit(0);
+  else {
+    int f;
+    int status;
+    f = fork();
+    if (!f)
+      execvp(command[0], command);
+    else
+      wait(&status);
+  }
 }
 
-void executeCD(char * dir) {
-    //tilde expansion
-    if (dir[0] == '~') {
-        chdir(getenv("HOME"));
-        int i;
-        for (i = 0 ; i < (int)strlen(dir) - 2 ; i++) {
-            dir[i] = dir[i + 2];
-        }
-        dir[i] = '\0';
-    }
-    chdir(dir);
-}

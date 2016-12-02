@@ -8,5 +8,3 @@ void executeRedirector(char ** input);
 char ** findRedirector(char * input);
 int hasRedirector(char * input);
 void executeMain(char * data);
-void executeCD(char * dir);
-void executeEXIT();

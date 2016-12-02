@@ -19,16 +19,15 @@ void ksh_run(char * input) {
 }
 
 int main() {
-    
-    char input[262144];
-    char cwd[262144];
-    while (1) {
-        getcwd(cwd, sizeof(cwd));
-        printf("(%s) %s ❯ ", getenv("USER"), cwd);
-        fgets(input, 262144, stdin);
-        * input = * trim(input);
-        ksh_run(input);
-    }
-    return 0;
-    
+  char input[262144];
+  char cwd[262144];
+  while (1) {
+    getcwd(cwd, sizeof(cwd));
+    printf("(%s) %s ❯ ", getenv("USER"), cwd);
+    fgets(input, 262144, stdin);
+    * input = * trim(input);
+    printf("%s\n", input);
+    ksh_run(input);
+  }
+  return 0; 
 }
