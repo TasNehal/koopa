@@ -26,7 +26,6 @@ int main() {
     printf("(%s) %s ❯ ", getenv("USER"), cwd);
     fgets(input, 262144, stdin);
     * input = * trim(input);
-    printf("%s\n", input);
     ksh_run(input);
   }
   return 0; 
