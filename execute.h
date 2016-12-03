@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <fcntl.h>
+#include <sys/stat.h>
 #include "parse.h"
 
 void executeRedirector(char ** input);

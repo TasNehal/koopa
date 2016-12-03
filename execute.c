@@ -5,6 +5,11 @@
 //second string can also have redirectors, executemain should do them in order
 char ** findRedirector(char * input) {
     char ** retAry = (char * *)malloc(sizeof(char *) * strlen(input));
+    for (int a = 0 ; a < 3 ; a++) {
+        for (int b = 0 ; b < (int)strlen(retAry[a]) ; b++) {
+            retAry[a][b] = '\0';
+        }
+    }
     //making the first part, the pipe, and the rest of the line
     for (int i = 0 ; i < (int)strlen(input) - 1 ; i++) {
         if (input[i] == '>') {
@@ -23,6 +28,7 @@ char ** findRedirector(char * input) {
                 for (int j = 0 ; j < i ; j++) {
                     retAry[0][j] = input[j];
                 }
+                printf("%s\n\n", retAry[0]);
                 retAry[1] = ">";
                 for (int k = i + 1 ; k < (int)strlen(input) ; k++) {
                     retAry[2][k - i - strlen(retAry[1])] = input[k];
@@ -136,27 +142,66 @@ void execute(char * data) {
 }
 
 void executeRedirector(char ** input) {
-  int fd;
-  int stdDup = dup(STDOUT_FILENO);
-  if (!strcmp(input[1], "<")) {
-    fd = open(input[0], O_CREAT | O_WRONLY | O_TRUNC, 0644);
-    dup2(fd, STDOUT_FILENO);
-    close(fd);
-    execute(input[2]);
-  }
-  else if (!strcmp(input[1], ">")) {
-    fd = open(input[2], O_CREAT | O_WRONLY | O_TRUNC, 0644);
-    dup2(fd, STDOUT_FILENO);
-    close(fd);
-    execute(input[0]);
-  }
-  dup2(stdDup, STDOUT_FILENO);
+    umask(0);
+    int fd;
+    int fd2 = dup(0);
+
+    printf("(%s)\n(%s)\n(%s)\n", input[0], input[1], input[2]);
+    
+    if ((!strcmp(input[1], ">"))) {
+        fd = open( input[2], O_CREAT | O_WRONLY | O_TRUNC, 666);
+        fd2 = dup(fd);
+        dup2(fd, 1);
+    }
+    else if ((!strcmp(input[1], "2>"))) {
+        fd = open( input[2], O_CREAT | O_WRONLY | O_TRUNC, 666);
+        fd2 = dup(fd);
+        dup2(fd, 2);
+    }
+    else if ((!strcmp(input[1], ">>"))) {
+        fd = open( input[2], O_CREAT | O_WRONLY | O_APPEND, 666);
+        fd2 = dup(fd);
+        dup2(fd, 1);
+    }
+    else if ((!strcmp(input[1], "2>>"))) {
+        fd = open( input[2], O_CREAT | O_WRONLY | O_APPEND, 666);
+        fd2 = dup(fd);
+        dup2(fd, 2);
+    }
+    else if ((!strcmp(input[1], "<"))) {
+        fd = open( input[2], O_CREAT | O_RDONLY, 444);
+        fd2 = dup(fd);
+        dup2(fd, 0);
+    }
+    //pipe?
+    else {
+        int fds[2];
+        fd2 = dup(1);
+        
+        int status;          
+        int f = fork();
+        
+        if (f == 0) {
+            dup2(fds[1], 1);
+            //will have to change this later
+            execvp(input[0], &input[0]);
+        }
+        else {         
+            wait(&status);
+            dup2(1, fd2);
+            close(fds[1]);
+        }
+    }
+    close(fd2);
 }
 
 void executeMain(char * data) {
   int x = hasRedirector(data);
   if (x) {
     char ** redirect = findRedirector(data);
+    for (int i = 0 ; i < 3 ; i++) {
+        redirect[i] = trim(redirect[i]);
+    }
     executeRedirector(redirect);
   }
   else
