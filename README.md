@@ -1,8 +1,6 @@
 # ksh - Koopa Shell
 by Ayman Ahmed and Jason Chua
 
-<i>NOT to be confused with kornshell, which is probably useful and probably doesn't segfault ~50% of the time.</i>
-
 <img src="http://image.flaticon.com/icons/svg/60/60758.svg" height="150" />
 <img src="http://vignette2.wikia.nocookie.net/nintendo/images/8/83/KoopaNSMB.png/revision/latest?cb=20110724132501&path-prefix=en" height="150" />
 
@@ -29,7 +27,7 @@ parse.c
 	Handles all line parsing fucntions
 	/*======== int count_tokens() ==========
 	Inputs:  char *line
-        	  char delim 
+        	  char *delims
 	Returns: Number of tokens in line separated by delim
 
 	Counts the number of times the character delim appears in the
@@ -55,7 +53,12 @@ parse.c
 	Removes leading and trailing whitespace on the string line.
 	Terminating '\0' is placed at a new location if necessary.
 	====================*/
-  
+
+execute.h
+
+execute.c 
+  TBD
+```
 ksh.h
   TBD
   
