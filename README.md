@@ -8,14 +8,15 @@ by Ayman Ahmed and Jason Chua
 ```
 - Forks and executes commands
 - Executes multiple commands by parsing on semicolons
+- Tilde expansion
 ```
 ## Attempted
 ```
-TBD
+Redirectors, pipes.
 ```
 ## Bugs
 ```
-TBD
+Redirectors don't work (segfault). 
 ```
 ## Files and Function Headers
 ```
