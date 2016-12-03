@@ -107,10 +107,16 @@ execute.c
 
 	Changes directories.
 	====================*/
-```
+	
 ksh.h
-  TBD
+  void ksh_run(char * input);
   
 ksh.c
-  TBD
+	/*======== void ksh_run ==========
+	Inputs:  char * input
+	Returns: 
+
+	Separates input line by semicolons and runs executeMain()
+	on each segment.
+	====================*/
 ```
