@@ -10,9 +10,10 @@ void ksh_run(char * input) {
     else {
         //recursively run each semicolon seperated part
         char ** lineItems = parse_line(input, ";");
-        for (int i = 0 ; i < count_tokens(input, ';') ; i++) {
-            printf("%d", i);
-            ksh_run(lineItems[i]);
+        for (int i = 0 ; i < tokens ; i++) {
+            //debug
+            //printf("%d)%s(\n", i, trim(lineItems[i]));
+            executeMain(trim(lineItems[i]));
         }
     }
     
@@ -23,9 +24,9 @@ int main() {
   char cwd[262144];
   while (1) {
     getcwd(cwd, sizeof(cwd));
-    printf("(%s) %s ❯ ", getenv("USER"), cwd);
+    printf("(%s%s%s) %s%s%s ❯ ", ANSI_COLOR_BLUE, getenv("USER"), ANSI_COLOR_RESET, ANSI_COLOR_RED, cwd, ANSI_COLOR_RESET);
     fgets(input, 262144, stdin);
-    * input = * trim(input);
+    *input = *trim(input);
     ksh_run(input);
   }
   return 0; 

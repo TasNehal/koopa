@@ -148,19 +148,31 @@ int hasRedirector(char * input) {
 }
 
 void executeMain(char * data) {
-  char ** command = parse_line(data, " ");
-  if (!strcmp(command[0], "cd"))
-    chdir(command[1]);
-  else if (!strcmp(command[0], "exit"))
-    exit(0);
-  else {
-    int f;
-    int status;
-    f = fork();
-    if (!f)
-      execvp(command[0], command);
-    else
-      wait(&status);
-  }
+    char ** command = parse_line(data, " ");
+    if ((!command[2]) && (!strcmp(command[0], "cd")))
+        executeCD(command[1]);
+    else if ((!command[1]) && (!strcmp(command[0], "exit")))
+        exit(0);
+    else {
+        int f;
+        int status;
+        f = fork();
+        if (!f)
+            execvp(command[0], command);
+        else
+            wait(&status);
+    }
 }
 
+void executeCD(char * dir) {
+    //tilde expansion
+    if (dir[0] == '~') {
+        chdir(getenv("HOME"));
+        int i;
+        for (i = 0 ; i < (int)strlen(dir) - 2 ; i++) {
+            dir[i] = dir[i + 2];
+        }
+        dir[i] = '\0';
+    }
+    chdir(dir);
+}

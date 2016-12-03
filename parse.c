@@ -27,25 +27,20 @@ char ** parse_line(char *line, char * delims) {
 
 char * trim(char *line) {
     char * retP = line;
-
+    //beginning
     while (line[0] == ' ') {
-        for (int i = 0 ; i < (int)strlen(line) - 1 ; i++) {
+        int i;
+        for (i = 0 ; i < (int)strlen(line) ; i++) {
             line[i] = line[i + 1];
         }
+        //line[i] = '\0';
     }
-    //getting rid of whitespace at end
-    for (int j = 0 ; j < (int)strlen(line) - 1 ; j++) {
-        //in bash double spaces in between words fail
-        if (line[j] == ' ' && line[j + 1] == ' ') {
-            for (int k = j ; k < (int)strlen(line) ; k++) {
-                line[k] = '\0';
-            }
-        }
-    }
-    //newline?
+    //end?
     for (int l = strlen(line) ; l > 0 ; l--) {
-        if (line[l] == '\n') {
+        if (line[l] == '\n' || line[l] == ' ') {
             line[l] = '\0';
+        }
+        else if (line[l] != '\n' && line[l] != '\0' && line[l] != ' '){
             break;
         }
     }

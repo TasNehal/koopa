@@ -7,4 +7,5 @@
 void executeRedirector(char ** input);
 char ** findRedirector(char * input);
 int hasRedirector(char * input);
+void executeCD(char * dir);
 void executeMain(char * data);
