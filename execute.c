@@ -90,29 +90,6 @@ char ** findRedirector(char * input) {
     return retAry;
 }
 
-//redirect based on the stuf; first 
-void executeRedirector(char ** input) {
-    //if there aren't any redirectors
-    if (!input[1]) {
-        executeMain(input[0]);
-    }
-    else {
-        //if the second part has no redirectors in it
-        if (!hasRedirector(input[2])) {
-            if (!strcmp(input[1], ">>")) {
-                
-            }
-            else if (!strcmp(input[1], ">")) {
-                //continue like this
-            }
-        }
-        else {
-            
-        }
-    }
-    
-}
-
 int hasRedirector(char * input) {
     char * first;
     if (strchr(input, '>') || strchr(input, '<') || strchr(input, '|')) {
@@ -141,21 +118,49 @@ int hasRedirector(char * input) {
     }
 }
 
+void execute(char * data) {
+  char ** command = parse_line(data, " ");
+  if ((!command[2]) && (!strcmp(command[0], "cd")))
+    executeCD(command[1]);
+  else if ((!command[1]) && (!strcmp(command[0], "exit")))
+    exit(0);
+  else {
+    int f;
+    int status;
+    f = fork();
+    if (!f)
+      execvp(command[0], command);
+    else
+      wait(&status);
+  }
+}
+
+void executeRedirector(char ** input) {
+  int fd;
+  int stdDup = dup(STDOUT_FILENO);
+  if (!strcmp(input[1], "<")) {
+    fd = open(input[0], O_CREAT | O_WRONLY | O_TRUNC, 0644);
+    dup2(fd, STDOUT_FILENO);
+    close(fd);
+    execute(input[2]);
+  }
+  else if (!strcmp(input[1], ">")) {
+    fd = open(input[2], O_CREAT | O_WRONLY | O_TRUNC, 0644);
+    dup2(fd, STDOUT_FILENO);
+    close(fd);
+    execute(input[0]);
+  }
+  dup2(stdDup, STDOUT_FILENO);
+}
+
 void executeMain(char * data) {
-    char ** command = parse_line(data, " ");
-    if ((!command[2]) && (!strcmp(command[0], "cd")))
-        executeCD(command[1]);
-    else if ((!command[1]) && (!strcmp(command[0], "exit")))
-        exit(0);
-    else {
-        int f;
-        int status;
-        f = fork();
-        if (!f)
-            execvp(command[0], command);
-        else
-            wait(&status);
-    }
+  int x = hasRedirector(data);
+  if (x) {
+    char ** redirect = findRedirector(data);
+    executeRedirector(redirect);
+  }
+  else
+    execute(data);
 }
 
 void executeCD(char * dir) {
