@@ -17,7 +17,6 @@ char ** findRedirector(char * input) {
                 for (int k = i + 2 ; k < (int)strlen(input) ; k++) {
                     retAry[2][k - i - strlen(retAry[1])] = input[k];
                 }
-                return retAry;
             }
             // > operator
             else {
@@ -28,7 +27,6 @@ char ** findRedirector(char * input) {
                 for (int k = i + 1 ; k < (int)strlen(input) ; k++) {
                     retAry[2][k - i - strlen(retAry[1])] = input[k];
                 }
-                return retAry;
             }
         }
         else if (input[i] == '2') {
@@ -42,7 +40,6 @@ char ** findRedirector(char * input) {
                     for (int k = i + 3 ; k < (int)strlen(input) ; k++) {
                         retAry[2][k - i - strlen(retAry[1])] = input[k];
                     }
-                    return retAry;
                 }
                 // 2> operator
                 else {
@@ -53,7 +50,6 @@ char ** findRedirector(char * input) {
                     for (int k = i + 2 ; k < (int)strlen(input) ; k++) {
                         retAry[2][k - i - strlen(retAry[1])] = input[k];
                     }
-                    return retAry;
                 }
             }
         }
@@ -65,7 +61,6 @@ char ** findRedirector(char * input) {
             for (int k = i + 2 ; k < (int)strlen(input) ; k++) {
                 retAry[2][k - i - strlen(retAry[1])] = input[k];
             }
-            return retAry;
         }
         else if (input[i] == '<') {
             for (int j = 0 ; j < i ; j++) {
@@ -75,7 +70,6 @@ char ** findRedirector(char * input) {
             for (int k = i + 1 ; k < (int)strlen(input) ; k++) {
                 retAry[2][k - i - strlen(retAry[1])] = input[k];
             }
-            return retAry;
         }
         else if (input[i] == '|') {
             for (int j = 0 ; j < i ; j++) {
@@ -85,14 +79,14 @@ char ** findRedirector(char * input) {
             for (int k = i + 1 ; k < (int)strlen(input) ; k++) {
                 retAry[2][k - i - strlen(retAry[1])] = input[k];
             }
-            return retAry;            
         }
         else {
             retAry[0] = input;
-            return retAry;
         }
     }
-    //will never reach here
+    //trimmin
+    retAry[0] = trim(retAry[0]);
+    retAry[2] = trim(retAry[2]);
     return retAry;
 }
 
