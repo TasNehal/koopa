@@ -6,7 +6,8 @@ by Ayman Ahmed and Jason Chua
 
 ## Features
 ```
-TBD
+- Forks and executes commands
+- Executes multiple commands by parsing on semicolons
 ```
 ## Attempted
 ```
