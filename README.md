@@ -55,9 +55,58 @@ parse.c
 	====================*/
 
 execute.h
+  char ** findRedirector(char * input);
+  int hasRedirector(char * input);
+  void execute(char * data);
+  void executeRedirector(char * input);
+  void executeMain(char * data);
+  void executeCD(char * dir);
 
 execute.c 
-  TBD
+	/*======== char ** findRedirector() ==========
+	Inputs:  char * input
+	Returns: Array separating commands and redirector
+
+	Finds the redirector in the given string and returns
+	an array with the commands/redirectors separated.
+	====================*/
+	
+	/*======== int hasRedirector() ==========
+	Inputs:  char * input
+	Returns: 0 or 1
+
+	Returns 0 or 1 depending on whether or not there is
+	a redirector in the input.
+	====================*/
+	
+	/*======== void execute() ==========
+	Inputs:  char * data
+	Returns: 
+
+	Executes a single command.
+	====================*/
+	
+	/*======== void executeRedirector() ==========
+	Inputs:  char * input
+	Returns: 
+
+	Executes commands that have redirectors.
+	====================*/
+	
+	/*======== void executeMain() ==========
+	Inputs:  char * data
+	Returns: 
+
+	Main execute function that takes the whole line as an input.
+	Runs execute() or executeRedirector().
+	====================*/
+	
+	/*======== void executeCD() ==========
+	Inputs:  char * dir
+	Returns: 
+
+	Changes directories.
+	====================*/
 ```
 ksh.h
   TBD
